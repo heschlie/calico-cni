@@ -124,6 +124,7 @@ test-containerized: run-etcd run-k8s-apiserver build-containerized dist/host-loc
 	-e PLUGIN=calico \
 	-e CNI_SPEC_VERSION=$(CNI_SPEC_VERSION) \
 	-v $(CURDIR):/go/src/github.com/projectcalico/cni-plugin:rw \
+	-v $(CURDIR)/dist:/opt/cni/bin \
 	$(CALICO_BUILD) sh -c '\
 			cd  /go/src/github.com/projectcalico/cni-plugin && \
 			ginkgo'

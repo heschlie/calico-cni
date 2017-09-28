@@ -75,7 +75,11 @@ do
 			echo "$dir/$filename is already here and UPDATE_CNI_BINARIES isn't true, skipping"
 			continue
 		fi
-		cp $path $dir/
+		if ! cp $path $dir/
+		then
+		    echo "Failed to copy $filename"
+		    return 1
+		fi
 	done
 
 	echo "Wrote Calico CNI binaries to $dir"
@@ -136,7 +140,11 @@ echo "CNI config: $(cat ${TMP_CONF})"
 sed -i s/__SERVICEACCOUNT_TOKEN__/${SERVICEACCOUNT_TOKEN:-}/g $TMP_CONF
 
 # Move the temporary CNI config into place.
-mv $TMP_CONF /host/etc/cni/net.d/${FILENAME}
+if ! mv $TMP_CONF /host/etc/cni/net.d/${FILENAME}
+then
+    echo "Failed to create CNI config"
+    return 1
+fi
 
 echo "Created CNI config $FILENAME"
 
